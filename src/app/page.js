@@ -1,66 +1,29 @@
+"use client";
 import Image from "next/image";
 import styles from "./page.module.css";
+import ProductionCard from "@/components/ProductionCard";
+import { useState } from "react";
+import MainContent from "@/components/MainContent";
+
+const data = [
+  { productionEntry: "24947", itemCode: "38070" , description1 : "Boars Head Pork and Beef franks 4/1" , description2 : "Cooked WIP for FP - 28162", pounds : 5000 ,startTime : "2024-06-01T08:00:00Z", endTime : "2024-06-01T12:00:00Z" },
+  { productionEntry: "24948", itemCode: "38070" , description1 : "Aldi Cocktails 4- 1" , description2 : "Cooked WIP for FP - 28162" ,pounds : 5000, startTime : "2024-06-01T08:00:00Z", endTime : "2024-06-01T12:00:00Z" },
+  { productionEntry: "24949", itemCode: "38070" , description1 : "Brinkers Jalapeno Cheddar" , description2 : "Cooked WIP for FP - 28162" ,pounds : 5000 , startTime : "2024-06-01T08:00:00Z", endTime : null }, 
+]
+
 
 export default function Home() {
+  const [selectedEntry, setSelectedEntry] = useState(null);
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.js file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <div className={styles.container}>
+      <div className={styles.navbar}></div>
+      <div className={styles.sidebar}> 
+        {data.map((item) => (<ProductionCard key={item.productionEntry} data={item} setSelectedEntry={setSelectedEntry} />))}
+      </div>
+      <div className={styles.mainContent}>  
+       <MainContent data={selectedEntry} />
+      </div>
+    </div> 
   );
 }
+       

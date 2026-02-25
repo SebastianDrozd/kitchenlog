@@ -1,0 +1,246 @@
+.container {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid rgb(220, 223, 226);
+  border-radius: 14px;
+  padding: 20px;
+  margin-top: 1em;
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.04);
+  min-height: 300px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(220, 223, 226, 0.7);
+  margin-bottom: 18px;
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 650;
+  color: #0f172a;
+  margin: 0;
+}
+
+.subtitle {
+  margin: 6px 0 0;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat( 1fr);
+  gap: 16px;
+}
+
+/* each input group */
+.field {
+  grid-column: span 4; /* 3 per row on wide screens */
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.control {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  border-radius: 10px;
+  background: #ffffff;
+  color: #0f172a;
+  outline: none;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+.control2 {
+  width: 80%;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  border-radius: 10px;
+  background: #ffffff;
+  color: #0f172a;
+  outline: none;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+
+.wantsdowntime {
+    display: flex;
+    gap: 1em;
+    align-items: center;
+    color: green;
+}.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.entryCard {
+  border: 1px solid rgba(226, 232, 240, 1);
+  border-radius: 14px;
+  padding: 14px;
+  background: #ffffff;
+}
+
+.entryTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.time {
+  font-size: 0.82rem;
+  color: #64748b;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.badge {
+  font-size: 0.74rem;
+  font-weight: 800;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  text-transform: capitalize;
+}
+.maintenance {
+  background: rgba(59, 130, 246, 0.12);
+  border-color: rgba(59, 130, 246, 0.25);
+  color: rgba(30, 64, 175, 1);
+}
+.breakdown {
+  background: rgba(249, 115, 22, 0.12);
+  border-color: rgba(249, 115, 22, 0.25);
+  color: rgba(154, 52, 18, 1);
+}
+
+.other {
+  background: rgba(148, 163, 184, 0.18);
+  border-color: rgba(148, 163, 184, 0.35);
+  color: #334155;
+}
+.entryDesc {
+  color: #0f172a;
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+.entryDescMuted {
+  color: #94a3b8;
+  font-size: 0.92rem;
+}
+
+.formCard {
+  border: 1px solid rgba(226, 232, 240, 1);
+  border-radius: 14px;
+  padding: 14px;
+  background: #ffffff;
+}
+.formHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid rgba(226, 232, 240, 1);
+}
+
+.formTitle {
+  font-weight: 800;
+  color: #0f172a;
+}
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 6px;
+}
+.secondaryBtn{
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(148, 163, 184, 0.7);
+    background: #ffffff;
+    color: #334155;
+}
+.primaryBtn{
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(59, 130, 246, 0.7);
+    background: rgba(59, 130, 246, 1);
+    color: #ffffff;
+}
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.formGrid .field {
+  grid-column: span 4;
+}
+
+@media (max-width: 900px) {
+  .formGrid .field {
+    grid-column: span 6;
+  }
+}
+
+@media (max-width: 560px) {
+  .formGrid .field {
+    grid-column: span 12;
+  }
+}
+
+.timeGrid {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(226, 232, 240, 1);
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.timeBlock {
+  border: 1px solid rgba(226, 232, 240, 1);
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.timeLabel {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+
+.timeValue {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 700px) {
+  .timeGrid {
+    grid-template-columns: 1fr;
+  }
+}
