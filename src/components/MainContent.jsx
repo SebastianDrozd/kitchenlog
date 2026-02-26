@@ -29,8 +29,7 @@ const MainContent = ({ data }) => {
                 </div>)
                 :
                 <div className={styles.noContent}>
-                    <h1>Create a new Entry</h1>
-                    <button className={styles.createButton}>Create</button>
+                  
                 </div>}
         </div>
     );

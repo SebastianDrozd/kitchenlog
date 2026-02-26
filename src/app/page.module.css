@@ -1,9 +1,7 @@
 .navbar {
-  background: #ffffff;
-  color: white;
-  padding: 20px;
   grid-column: span 2;
   /* navbar spans both columns */
+  
 }
 
 .container {
@@ -12,7 +10,7 @@
   /* 2 columns: sidebar + content */
   grid-template-columns: 250px 1fr;
   /* 2 rows: header + rest of page */
-  grid-template-rows: 0px 1fr;
+  grid-template-rows: 90px 1fr;
 
   /* This defines layout structure */
   grid-template-areas:
