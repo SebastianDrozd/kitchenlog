@@ -3,7 +3,7 @@ import styles from "../styles/MainContent.module.css"
 import Main from "./tabs/Main";
 import Cleaning from "./tabs/Cleaning";
 import DownTime from "./tabs/DownTime";
-const MainContent = ({ data }) => {
+const MainContent = ({ data,scannedCode }) => {
     const tabs = [
         "Main",
         "Cleaning",
@@ -29,7 +29,7 @@ const MainContent = ({ data }) => {
                 </div>)
                 :
                 <div className={styles.noContent}>
-                  
+                  {scannedCode}
                 </div>}
         </div>
     );

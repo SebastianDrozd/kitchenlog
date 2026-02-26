@@ -1,6 +1,7 @@
 import { AlarmClock, CircleCheck } from "lucide-react";
 import styles from "../styles/ProductionCard.module.css"
 const ProductionCard = ({ data, setSelectedEntry }) => {
+    console.log("Data is productionCard", data)
     return (
         <div className={styles.cardContainer} onClick={() => setSelectedEntry(data)}>
             <div className={styles.cardHeader}>
