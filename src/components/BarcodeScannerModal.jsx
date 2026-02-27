@@ -4,20 +4,20 @@ import styles from "../styles/BarcodeScannerModal.module.css";
 import { QueryClient, useMutation } from "@tanstack/react-query";
 import { createLineEntry } from "@/api/KitchenLog";
 
-export default function BarcodeScannerModal({ open, onClose, onScan , scannedCode, setScannedCode,selectedline}) {
-     const queryClient = new QueryClient();
-    const mutation = useMutation({
-        mutationFn : (data) => createLineEntry(data),
-        onSuccess: () => {
-
-        } 
-    });
+export default function BarcodeScannerModal({ open, onClose, onScan, scannedCode, setScannedCode, selectedline }) {
+  const queryClient = new QueryClient();
+  const mutation = useMutation({
+    mutationFn: (data) => createLineEntry(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["productionData"]);
+    }
+  });
   const videoRef = useRef(null);
   const readerRef = useRef(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
-   
+
 
     if (!open) return;
     let stopped = false;
@@ -37,11 +37,11 @@ export default function BarcodeScannerModal({ open, onClose, onScan , scannedCod
             if (result) {
               // result.getText() is the barcode value
               const data = {
-                Entry : result.getText(),
-                Line : selectedline,
-                Timestamp : new Date().toISOString()
+                Entry: result.getText(),
+                Line: selectedline,
+                Timestamp: new Date().toISOString()
               }
-                mutation.mutate(data)
+              mutation.mutate(data)
               setScannedCode(result.getText());
               onScan(result.getText());
               onClose();
@@ -64,7 +64,7 @@ export default function BarcodeScannerModal({ open, onClose, onScan , scannedCod
       stopped = true;
       try {
         readerRef.current?.reset(); // stops camera + decoding
-      } catch {}
+      } catch { }
     };
   }, [open, onClose, onScan]);
 

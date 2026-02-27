@@ -1,10 +1,21 @@
+import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import styles from "../../styles/tabs/DownTime.module.css";
 import { useMemo, useState } from "react";
+import { createDownTimeEntry, getDownTimeEntries } from "@/api/KitchenLog";
 
-const DownTime = () => {
-  const [downTimeEntries, setDownTimeEntries] = useState([]);
+const DownTime = ({ data, selectedline }) => {
+
+
+
+
   const [showForm, setShowForm] = useState(false);
+  const queryClient = new QueryClient();
+    const { entries, isLoading, isError } = useQuery({
+    queryKey: ["downTimeEntries", selectedline],
+    queryFn: () => getDownTimeEntries(selectedline),
+    
 
+  })
   // helpers for <input type="datetime-local" />
   const toLocalInputValue = (date = new Date()) => {
     const pad = (n) => String(n).padStart(2, "0");
@@ -45,15 +56,14 @@ const DownTime = () => {
       : null;
 
     const entry = {
-      id: crypto?.randomUUID?.() ?? String(Date.now()),
-      reason: newDownTimeEntry.reason,
-      description: newDownTimeEntry.description.trim(),
-      shutdownTime: shutdown,
-      startupTime: startup,
-      createdAt: new Date().toISOString(),
+      LineId: selectedLine,
+      Reason: newDownTimeEntry.reason,
+      Description: newDownTimeEntry.description.trim(),
+      ShutdownTime: shutdown,
+      StartupTime: startup
     };
-
-    setDownTimeEntries((prev) => [entry, ...prev]);
+    console.log(entry);
+    saveMutation.mutate(entry);
     closeForm();
   };
 
@@ -61,17 +71,17 @@ const DownTime = () => {
     setNewDownTimeEntry((prev) => ({ ...prev, [key]: e.target.value }));
   };
 
-  const hasEntries = downTimeEntries.length > 0;
+  const hasEntries = entries?.length > 0;
 
   const formatDT = (iso) =>
     iso
       ? new Date(iso).toLocaleString([], {
-          month: "2-digit",
-          day: "2-digit",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        })
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
       : "—";
 
   const calcMinutes = (startIso, endIso) => {
@@ -82,7 +92,18 @@ const DownTime = () => {
     const diff = Math.round((b - a) / 60000);
     return diff >= 0 ? diff : null;
   };
+  const saveMutation = useMutation({
+    mutationFn: (info) => createDownTimeEntry(info),
+    onSuccess: () => {
+      console.log("Data saved successfully");
+      queryClient.invalidateQueries({ queryKey: ["downTimeEntries", selectedline] });
 
+    }
+  }
+  );
+   if (isLoading) return <div>Loading...</div>
+  if (isError) return <div>Error loading downtime entries</div>
+  console.log("this is downtime entries", entries)
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -103,7 +124,7 @@ const DownTime = () => {
       {/* List */}
       {hasEntries && !showForm && (
         <div className={styles.list}>
-          {downTimeEntries.map((e) => {
+          {entries.map((e) => {
             const minutes = calcMinutes(e.shutdownTime, e.startupTime);
             return (
               <div key={e.id} className={styles.entryCard}>
@@ -120,12 +141,12 @@ const DownTime = () => {
                 <div className={styles.timeGrid}>
                   <div className={styles.timeBlock}>
                     <div className={styles.timeLabel}>Shutdown</div>
-                    <div className={styles.timeValue}>{formatDT(e.shutdownTime)}</div>
+                    <div className={styles.timeValue}>{formatDT(e.ShutdownTime)}</div>
                   </div>
 
                   <div className={styles.timeBlock}>
                     <div className={styles.timeLabel}>Startup</div>
-                    <div className={styles.timeValue}>{formatDT(e.startupTime)}</div>
+                    <div className={styles.timeValue}>{formatDT(e.StartupTime)}</div>
                   </div>
 
                   <div className={styles.timeBlock}>
@@ -137,7 +158,7 @@ const DownTime = () => {
                 </div>
 
                 {e.description ? (
-                  <div className={styles.entryDesc}>{e.description}</div>
+                  <div className={styles.entryDesc}>{e.Description}</div>
                 ) : (
                   <div className={styles.entryDescMuted}>No description</div>
                 )}
