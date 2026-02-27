@@ -53,6 +53,7 @@ const getDownTimeEntries = async (lineId) => {
     try {
         console.log("fetching downtime entries for line", lineId)
         const response = await axios.get(`http://localhost:5137/api/KitchenLog/downtime/${lineId}`);
+        console.log("this is downtime entries response", response.data)
         return response.data;
     }
     catch (error) {

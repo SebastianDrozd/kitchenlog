@@ -71,7 +71,7 @@ const DownTime = ({ data, selectedline }) => {
     setNewDownTimeEntry((prev) => ({ ...prev, [key]: e.target.value }));
   };
 
-  const hasEntries = entries?.length > 0;
+  const hasEntries = entries && entries.length > 0;
 
   const formatDT = (iso) =>
     iso
@@ -103,6 +103,7 @@ const DownTime = ({ data, selectedline }) => {
   );
    if (isLoading) return <div>Loading...</div>
   if (isError) return <div>Error loading downtime entries</div>
+  
   console.log("this is downtime entries", entries)
   return (
     <div className={styles.container}>
@@ -125,12 +126,12 @@ const DownTime = ({ data, selectedline }) => {
       {hasEntries && !showForm && (
         <div className={styles.list}>
           {entries.map((e) => {
-            const minutes = calcMinutes(e.shutdownTime, e.startupTime);
+            const minutes = calcMinutes(e.ShutdownTime, e.StartupTime);
             return (
               <div key={e.id} className={styles.entryCard}>
                 <div className={styles.entryTop}>
                   <span className={`${styles.badge} ${styles[e.reason] || ""}`}>
-                    {e.reason}
+                    {e.Reason}
                   </span>
 
                   <span className={styles.time}>
