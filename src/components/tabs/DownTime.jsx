@@ -1,21 +1,15 @@
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
+import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import styles from "../../styles/tabs/DownTime.module.css";
 import { useMemo, useState } from "react";
 import { createDownTimeEntry, getDownTimeEntries } from "@/api/KitchenLog";
 
 const DownTime = ({ data, selectedline }) => {
-
-
-
-
   const [showForm, setShowForm] = useState(false);
-  const queryClient = new QueryClient();
-    const { entries, isLoading, isError } = useQuery({
+  const queryClient =  useQueryClient()
+  const { data : entries, isLoading, isError } = useQuery({
     queryKey: ["downTimeEntries", selectedline],
     queryFn: () => getDownTimeEntries(selectedline),
-    
-
-  })
+  });
   // helpers for <input type="datetime-local" />
   const toLocalInputValue = (date = new Date()) => {
     const pad = (n) => String(n).padStart(2, "0");
@@ -56,55 +50,48 @@ const DownTime = ({ data, selectedline }) => {
       : null;
 
     const entry = {
-      LineId: selectedLine,
+      LineId: selectedline,
       Reason: newDownTimeEntry.reason,
       Description: newDownTimeEntry.description.trim(),
       ShutdownTime: shutdown,
-      StartupTime: startup
+      StartupTime: startup,
     };
     console.log(entry);
     saveMutation.mutate(entry);
-    closeForm();
+  
   };
 
   const handleChange = (key) => (e) => {
     setNewDownTimeEntry((prev) => ({ ...prev, [key]: e.target.value }));
   };
-
-  const hasEntries = entries && entries.length > 0;
-
   const formatDT = (iso) =>
     iso
       ? new Date(iso).toLocaleString([], {
-        month: "2-digit",
-        day: "2-digit",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-      })
+          month: "2-digit",
+          day: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        })
       : "—";
 
   const calcMinutes = (startIso, endIso) => {
-    if (!startIso || !endIso) return null;
-    const a = new Date(startIso).getTime();
-    const b = new Date(endIso).getTime();
-    if (Number.isNaN(a) || Number.isNaN(b)) return null;
-    const diff = Math.round((b - a) / 60000);
-    return diff >= 0 ? diff : null;
+    return startIso - endIso;
   };
   const saveMutation = useMutation({
     mutationFn: (info) => createDownTimeEntry(info),
     onSuccess: () => {
       console.log("Data saved successfully");
-      queryClient.invalidateQueries({ queryKey: ["downTimeEntries", selectedline] });
+        closeForm();
+      queryClient.invalidateQueries({
+        queryKey: ["downTimeEntries", selectedline],
+      });
+    },
+  });
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>Error loading downtime entries</div>;
 
-    }
-  }
-  );
-   if (isLoading) return <div>Loading...</div>
-  if (isError) return <div>Error loading downtime entries</div>
-  
-  console.log("this is downtime entries", entries)
+  console.log("this is downtime entries", entries);
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -116,21 +103,25 @@ const DownTime = ({ data, selectedline }) => {
         </div>
 
         {!showForm && (
-          <button type="button" className={styles.primaryBtn} onClick={openForm}>
+          <button
+            type="button"
+            className={styles.primaryBtn}
+            onClick={openForm}
+          >
             + Add downtime
           </button>
         )}
       </div>
 
       {/* List */}
-      {hasEntries && !showForm && (
+      {!showForm && (
         <div className={styles.list}>
-          {entries.map((e) => {
+          {entries?.map((e) => {
             const minutes = calcMinutes(e.ShutdownTime, e.StartupTime);
             return (
               <div key={e.id} className={styles.entryCard}>
                 <div className={styles.entryTop}>
-                  <span className={`${styles.badge} ${styles[e.reason] || ""}`}>
+                  <span className={`${styles.badge} ${styles[e.Reason] || ""}`}>
                     {e.Reason}
                   </span>
 
@@ -142,12 +133,16 @@ const DownTime = ({ data, selectedline }) => {
                 <div className={styles.timeGrid}>
                   <div className={styles.timeBlock}>
                     <div className={styles.timeLabel}>Shutdown</div>
-                    <div className={styles.timeValue}>{formatDT(e.ShutdownTime)}</div>
+                    <div className={styles.timeValue}>
+                      {formatDT(e.ShutdownTime)}
+                    </div>
                   </div>
 
                   <div className={styles.timeBlock}>
                     <div className={styles.timeLabel}>Startup</div>
-                    <div className={styles.timeValue}>{formatDT(e.StartupTime)}</div>
+                    <div className={styles.timeValue}>
+                      {formatDT(e.StartupTime)}
+                    </div>
                   </div>
 
                   <div className={styles.timeBlock}>
@@ -158,7 +153,7 @@ const DownTime = ({ data, selectedline }) => {
                   </div>
                 </div>
 
-                {e.description ? (
+                {e.Description ? (
                   <div className={styles.entryDesc}>{e.Description}</div>
                 ) : (
                   <div className={styles.entryDescMuted}>No description</div>
@@ -255,9 +250,12 @@ const DownTime = ({ data, selectedline }) => {
               className={styles.primaryBtn}
               onClick={addDownTimeEntry}
               disabled={!newDownTimeEntry.shutdownTime}
-              title={!newDownTimeEntry.shutdownTime ? "Shutdown time required" : ""}
+              title={
+                !newDownTimeEntry.shutdownTime ? "Shutdown time required" : ""
+              }
             >
-              Add entry
+              {saveMutation.isPending ?<span className="loader"></span> :  "Add entry"}
+             
             </button>
           </div>
         </div>

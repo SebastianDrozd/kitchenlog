@@ -1,31 +1,56 @@
 import { AlarmClock, CircleCheck } from "lucide-react";
-import styles from "../styles/ProductionCard.module.css"
+import styles from "../styles/ProductionCard.module.css";
+
 const ProductionCard = ({ data, setSelectedEntry }) => {
-    console.log("Data is productionCard", data)
-    return (
-        <div className={styles.cardContainer} onClick={() => setSelectedEntry(data)}>
-            <div className={styles.cardHeader}>
-                {data.EndTime ? <CircleCheck color="green" /> : <AlarmClock color="orange" />}
-                <h3> {data?.ProductionEntry} - {data?.FormulaCode}</h3>
-            </div>
-            <p className={styles.description}>{data?.Description1}</p>
-            <p className={styles.description}>{data?.Description2}</p>
-            <div className={styles.timeRow}>
-                <div className={styles.timeCell}>
-                    {data?.StartTime
-                        ? data.StartTime.slice(0, 5)
-                        : "Not started"}
-                </div>
+  const isComplete = !!data?.EndTime;
 
-                <div className={styles.timeCell}>
-                    {data?.EndTime
-                        ? data.EndTime.slice(0, 5)
-                        : "Not completed"}
-                </div>
-            </div>
+  const formatTime = (t) => (t ? String(t).slice(0, 5) : null);
 
+  return (
+    <button
+      type="button"
+      className={`${styles.card} ${isComplete ? styles.complete : styles.running}`}
+      onClick={() => setSelectedEntry(data)}
+    >
+      <div className={styles.top}>
+        <div className={styles.headerLeft}>
+          <span className={styles.statusIcon}>
+            {isComplete ? <CircleCheck size={18} /> : <AlarmClock size={18} />}
+          </span>
+
+          <div className={styles.titleWrap}>
+            <div className={styles.title}>
+              <span className={styles.entry}>{data?.ProductionEntry}</span>
+              <span className={styles.sep}>•</span>
+              <span className={styles.code}>{data?.FormulaCode}</span>
+            </div>
+            <div className={styles.subTitle}>
+              {isComplete ? "Completed" : "In progress"}
+            </div>
+          </div>
         </div>
-    );
-}
 
-export default ProductionCard;  
+        <span className={styles.chev}>›</span>
+      </div>
+
+      <div className={styles.descBlock}>
+        {data?.Description1 && <div className={styles.desc}>{data.Description1}</div>}
+        {data?.Description2 && <div className={styles.descMuted}>{data.Description2}</div>}
+      </div>
+
+      <div className={styles.metaRow}>
+        <div className={styles.pill}>
+          <span className={styles.pillLabel}>Start</span>
+          <span className={styles.pillValue}>{formatTime(data?.StartTime) ?? "—"}</span>
+        </div>
+
+        <div className={styles.pill}>
+          <span className={styles.pillLabel}>End</span>
+          <span className={styles.pillValue}>{formatTime(data?.EndTime) ?? "—"}</span>
+        </div>
+      </div>
+    </button>
+  );
+};
+
+export default ProductionCard;

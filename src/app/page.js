@@ -8,39 +8,52 @@ import Navbar from "@/components/Navbar";
 import { getData } from "../../data";
 import { useQuery } from "@tanstack/react-query";
 import { getActiveEntries } from "@/api/KitchenLog";
-
-
-
-
+import { Toaster } from "react-hot-toast";
 
 export default function Home() {
   const [selectedEntry, setSelectedEntry] = useState(null);
   const [selectedline, setSelectedLine] = useState(1);
   const [scannedCode, setScannedCode] = useState(null);
 
-  const {isPending,isError,data} =useQuery({
-  queryKey : ["productionData",selectedline],
-  queryFn : () => getActiveEntries(selectedline)
-  })
+  const { isLoading, isError, data } = useQuery({
+    queryKey: ["productionData", selectedline],
+    queryFn: () => getActiveEntries(selectedline),
+  });
 
   useEffect(() => {
     if (data) {
-      setSelectedEntry(data[0])
+      setSelectedEntry(data[0]);
     }
-  }, [selectedline,data])
+  }, [selectedline, data]);
 
-console.log("this is data", data)
+  
   return (
     <div className={styles.container}>
       <div className={styles.navbar}>
-        <Navbar selectedline={selectedline} setSelectedLine={setSelectedLine} scannedCode={scannedCode} setScannedCode={setScannedCode} />
+        <Navbar
+          selectedline={selectedline}
+          setSelectedLine={setSelectedLine}
+          scannedCode={scannedCode}
+          setScannedCode={setScannedCode}
+        />
       </div>
       <div className={styles.sidebar}>
-        {data?.map((item) => (<ProductionCard key={item.Id} data={item} setSelectedEntry={setSelectedEntry} />))}
+        {data?.map((item) => (
+          <ProductionCard
+            key={item.Id}
+            data={item}
+            setSelectedEntry={setSelectedEntry}
+          />
+        ))}
       </div>
       <div className={styles.mainContent}>
-        <MainContent data={selectedEntry} scannedCode={scannedCode} selectedline={selectedline} />
+        <MainContent
+          data={selectedEntry}
+          scannedCode={scannedCode}
+          selectedline={selectedline}
+        />
       </div>
+      <Toaster position="bottom-right" />
     </div>
   );
 }

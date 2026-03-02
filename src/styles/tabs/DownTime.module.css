@@ -132,9 +132,12 @@
   color: #334155;
 }
 .entryDesc {
+  margin-left: 0.5em;
+  margin-top: 1em;
   color: #0f172a;
   font-size: 0.92rem;
   line-height: 1.35;
+  
 }
 .entryDescMuted {
   color: #94a3b8;
@@ -173,6 +176,7 @@
     border: 1px solid rgba(148, 163, 184, 0.7);
     background: #ffffff;
     color: #334155;
+    cursor: pointer;
 }
 .primaryBtn{
     padding: 8px 14px;
@@ -180,6 +184,7 @@
     border: 1px solid rgba(59, 130, 246, 0.7);
     background: rgba(59, 130, 246, 1);
     color: #ffffff;
+    cursor: pointer;
 }
 .formGrid {
   display: grid;
@@ -229,6 +234,10 @@
   letter-spacing: 0.06em;
   margin-bottom: 6px;
 }
+.textarea{
+   border: 1px solid rgba(226, 232, 240, 1);
+   border-radius: 5px;
+}
 
 .timeValue {
   font-size: 0.92rem;
@@ -244,3 +253,52 @@
     grid-template-columns: 1fr;
   }
 }
+
+.lds-dual-ring,
+.lds-dual-ring:after {
+  box-sizing: border-box;
+}
+.lds-dual-ring {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6.4px solid currentColor;
+  border-color: currentColor transparent currentColor transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.loader {
+    width: 48px;
+    height: 48px;
+    border: 5px solid #FFF;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+    }
+
+    @keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+    } 
+
