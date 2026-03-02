@@ -122,3 +122,35 @@
   font-weight: 850;
   color: #0f172a;
 }
+.loader {
+    width: 100px;
+    height: 100px;
+    background: #fff;
+    border-radius: 50%;
+    position: relative;
+    animation: skLinRotate 1s ease-in-out infinite alternate;
+  }
+  .loader:after{
+    content:"";
+    position: absolute;
+    inset: 5px;
+    border-radius: 50%;
+    border: 5px solid transparent;
+    border-top-color: #ff3d00;
+  }
+  @keyframes skLinRotate {
+    95% ,100% { transform: rotate(840deg) }
+  }
+
+  .deleteBtn{
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: #ff0000;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-size: 0.92rem;
+    font-weight: 750;
+    cursor: pointer;
+    transition: background 120ms ease, transform 120ms ease;
+  }

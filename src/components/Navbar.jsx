@@ -1,11 +1,20 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "../styles/Navbar.module.css";
 import BarcodeScannerModal from "./BarcodeScannerModal";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { CreateSetup, GetSetupForLine, updateSetupForLine } from "@/api/KitchenLog";
 
 const lines = [1, 2, 3, 4, 5, 6, 7];
 
 const Navbar = ({ selectedline, setSelectedLine, scannedCode, setScannedCode }) => {
   const [scannerOpen, setScannerOpen] = useState(false);
+  const queryClient = useQueryClient();
+
+  const {isLoading, data : setupData} = useQuery({
+    queryKey: ["setupData", selectedline],
+    queryFn: () => GetSetupForLine(selectedline),
+    
+  })
 
   // Setup popover state + form
   const [setupOpen, setSetupOpen] = useState(false);
@@ -27,11 +36,16 @@ const Navbar = ({ selectedline, setSelectedLine, scannedCode, setScannedCode }) 
     setSetupForm((prev) => ({ ...prev, [key]: e.target.value }));
   };
 
-  const handleSetupSave = () => {
-    // Replace with mutation later
-    console.log("Saving setup:", { line: selectedline, ...setupForm });
-    setSetupOpen(false);
-  };
+useEffect(() => {
+    if(setupData){
+        setSetupForm({
+            crew: setupData[0]?.StandardCrew ?? "", 
+            setupStart: setupData[0]?.LineStart ?? "",
+            setupEnd: setupData[0]?.LineFinish ?? "",
+            notes: setupData[0]?.Notes ?? ""
+        })
+    }
+}, [setupData]) 
 
   // click-outside to close
   useEffect(() => {
@@ -44,6 +58,41 @@ const Navbar = ({ selectedline, setSelectedLine, scannedCode, setScannedCode }) 
     window.addEventListener("mousedown", onDown);
     return () => window.removeEventListener("mousedown", onDown);
   }, [setupOpen]);
+
+  const saveMutation = useMutation({
+    mutationFn : (data) => CreateSetup(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ["setupData", selectedline]}),
+      toast.success("Setup created successfully")
+    }
+  })
+
+  const updateMutation = useMutation({
+    mutationFn : (data) => updateSetupForLine(selectedline, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ["setupData", selectedline]}),
+      toast.success("Setup updated successfully")
+    }
+  })
+
+    const handleSetupSave = () => {
+    if(!selectedline) return;
+
+    const dataToSave = {
+      Line: selectedline,
+      StandardCrew: Number(setupForm.crew),
+      LineStart: setupForm.setupStart,
+      LineFinish: setupForm.setupEnd,
+      Notes: setupForm.notes
+    }
+    console.log("Data to save for setup", dataToSave)
+    if(setupData){
+      updateMutation.mutate(dataToSave)
+    }else{
+      saveMutation.mutate(dataToSave)
+    }
+  };
+
 
   return (
     <div className={styles.container}>

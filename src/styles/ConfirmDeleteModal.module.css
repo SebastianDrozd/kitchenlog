@@ -1,0 +1,194 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(2, 6, 23, 0.55);
+  backdrop-filter: blur(6px);
+}
+
+.modal {
+  position: relative;
+  width: min(520px, 96vw);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  box-shadow:
+    0 25px 60px rgba(15, 23, 42, 0.22),
+    0 8px 18px rgba(15, 23, 42, 0.12);
+  overflow: hidden;
+  animation: pop 160ms ease-out;
+}
+
+@keyframes pop {
+  from { transform: translateY(8px) scale(0.98); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 46px 1fr;
+  gap: 14px;
+  padding: 18px 18px 10px;
+}
+
+.icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: rgba(15, 23, 42, 0.06);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.icon svg {
+  width: 22px;
+  height: 22px;
+  fill: rgba(15, 23, 42, 0.75);
+}
+
+.dangerIcon {
+  background: rgba(239, 68, 68, 0.10);
+  border: 1px solid rgba(239, 68, 68, 0.22);
+}
+
+.dangerIcon svg {
+  fill: rgba(185, 28, 28, 0.95);
+}
+
+.headerText {
+  display: grid;
+  gap: 6px;
+}
+
+.title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: rgba(15, 23, 42, 0.92);
+  letter-spacing: 0.2px;
+}
+
+.message {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: rgba(15, 23, 42, 0.72);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 18px 18px;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.cancelBtn,
+.confirmBtn {
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: 650;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+}
+
+.cancelBtn {
+  background: rgba(15, 23, 42, 0.04);
+  color: rgba(15, 23, 42, 0.85);
+}
+
+.cancelBtn:hover {
+  background: rgba(15, 23, 42, 0.06);
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.10);
+}
+
+.confirmBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(15, 23, 42, 0.92);
+  color: white;
+  border-color: rgba(15, 23, 42, 0.18);
+}
+
+.confirmBtn:hover {
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.18);
+  transform: translateY(-1px);
+}
+
+.dangerBtn {
+  background: rgba(220, 38, 38, 0.95);
+  border-color: rgba(220, 38, 38, 0.35);
+}
+
+.dangerBtn:hover {
+  box-shadow: 0 10px 22px rgba(220, 38, 38, 0.22);
+}
+
+.cancelBtn:disabled,
+.confirmBtn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btnSpinner {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  border-top-color: rgba(255, 255, 255, 1);
+  animation: spin 0.85s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Invisible full-screen button behind modal to allow “click outside to close” */
+.outsideClose {
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  border: 0;
+  cursor: default;
+}
+
+@media (prefers-color-scheme: dark) {
+  .modal {
+    background: rgba(2, 6, 23, 0.78);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+  }
+
+  .title {
+    color: rgba(226, 232, 240, 0.92);
+  }
+
+  .message {
+    color: rgba(226, 232, 240, 0.70);
+  }
+
+  .actions {
+    border-top: 1px solid rgba(148, 163, 184, 0.12);
+  }
+
+  .cancelBtn {
+    background: rgba(148, 163, 184, 0.08);
+    color: rgba(226, 232, 240, 0.88);
+    border-color: rgba(148, 163, 184, 0.18);
+  }
+
+  .icon {
+    background: rgba(148, 163, 184, 0.10);
+    border: 1px solid rgba(148, 163, 184, 0.16);
+  }
+
+  .icon svg {
+    fill: rgba(226, 232, 240, 0.80);
+  }
+}

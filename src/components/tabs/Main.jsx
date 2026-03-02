@@ -143,7 +143,7 @@ const Main = ({ data }) => {
           <div className={styles.statLabel}>Pounds Stuffed</div>
           <div className={styles.statValue}>
             {form.sticksStuffed && form.weightOfStick
-              ? (form.sticksStuffed * form.weightOfStick) / 1000
+              ? (form.sticksStuffed * form.weightOfStick) 
               : 0}{" "}
             <span className={styles.statUnit}>lbs</span>
           </div>

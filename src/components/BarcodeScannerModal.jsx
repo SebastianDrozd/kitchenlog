@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { BrowserMultiFormatReader } from "@zxing/browser";
 import styles from "../styles/BarcodeScannerModal.module.css";
-import { QueryClient, useMutation } from "@tanstack/react-query";
+import { QueryClient, useMutation, useQueryClient } from "@tanstack/react-query";
 import { createLineEntry } from "@/api/KitchenLog";
 
 export default function BarcodeScannerModal({ open, onClose, onScan, scannedCode, setScannedCode, selectedline }) {
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: (data) => createLineEntry(data),
     onSuccess: () => {
-      queryClient.invalidateQueries(["productionData"]);
+      queryClient.invalidateQueries(["productionData",selectedline]);
     }
   });
   const videoRef = useRef(null);

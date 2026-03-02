@@ -48,6 +48,7 @@ export default function Home() {
       </div>
       <div className={styles.mainContent}>
         <MainContent
+        isLoading={isLoading}
           data={selectedEntry}
           scannedCode={scannedCode}
           selectedline={selectedline}

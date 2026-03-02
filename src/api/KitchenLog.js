@@ -62,10 +62,76 @@ const getDownTimeEntries = async (lineId) => {
     }
 }
 
+const CreateSetup = async (setupData) => {
+    try{
+        console.log("creating setup with data", setupData)
+        const response = await axios.post(`http://localhost:5137/api/KitchenLog/setup`, setupData);
+        console.log("this is setup response", response)
+        return response.data;
+
+    }catch(error){
+        console.error("Error creating setup:", error);
+        throw error;
+    }
+}
+
+const GetSetupForLine = async (lineId) => {
+    try{
+        console.log("fetching setup for line", lineId)
+        const response = await axios.get(`http://localhost:5137/api/KitchenLog/setup/${lineId}`);
+        console.log("this is setup response", response.data)
+        return response.data;
+    }catch(error){
+        console.error("Error fetching setup for line:", error);
+        throw error;
+    }
+}
+
+const updateSetupForLine = async (lineId, setupData) => {
+    try{
+        console.log("updating setup for line", lineId, "with data", setupData)
+        const response = await axios.put(`http://localhost:5137/api/KitchenLog/setup/${lineId}`, setupData);
+        console.log("this is update setup response", response.data)
+        return response.data;
+    }catch(error){
+        console.error("Error updating setup for line:", error);
+        throw error;
+    }
+}
+
+const createCleaningEntry = async (cleaningData) => {
+    try{
+        console.log("creating cleaning entry with data", cleaningData)
+        const response = await axios.post(`http://localhost:5137/api/KitchenLog/cleaning`, cleaningData);
+        console.log("this is cleaning response", response)
+        return response.data;
+    }catch(error){
+        console.error("Error creating cleaning entry:", error);
+        throw error;
+    }
+}
+
+const getCleaningEntryForLine = async (lineId) => {
+    try{
+        console.log("fetching cleaning entry for line", lineId)
+        const response = await axios.get(`http://localhost:5137/api/KitchenLog/cleaning/${lineId}`);
+        console.log("this is cleaning entry response", response.data)
+        return response.data;
+    }catch(error){
+        console.error("Error fetching cleaning entry for line:", error);
+        throw error;
+    }
+}
+
 module.exports = {
     createLineEntry,
     getActiveEntries,
     updateLineEntry,
     createDownTimeEntry,
-    getDownTimeEntries
+    getDownTimeEntries,
+    CreateSetup,
+    GetSetupForLine,
+    updateSetupForLine,
+    createCleaningEntry,
+    getCleaningEntryForLine
 }

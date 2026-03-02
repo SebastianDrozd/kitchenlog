@@ -1,0 +1,84 @@
+.wrap {
+  width: 100%;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.fullScreen {
+  min-height: 100vh;
+}
+
+.card {
+  display: grid;
+  place-items: center;
+  gap: 12px;
+  padding: 18px 20px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(15, 23, 42, 0.10);
+  box-shadow:
+    0 10px 25px rgba(15, 23, 42, 0.08),
+    0 2px 8px rgba(15, 23, 42, 0.06);
+  backdrop-filter: blur(10px);
+}
+
+.spinner {
+  border-radius: 999px;
+  border-style: solid;
+  border-width: 3px;
+  border-color: rgba(15, 23, 42, 0.14);
+  border-top-color: rgba(15, 23, 42, 0.75);
+  animation: spin 0.85s linear infinite;
+}
+
+.sm {
+  width: 18px;
+  height: 18px;
+  border-width: 2px;
+}
+
+.md {
+  width: 28px;
+  height: 28px;
+  border-width: 3px;
+}
+
+.lg {
+  width: 44px;
+  height: 44px;
+  border-width: 4px;
+}
+
+.label {
+  font-size: 0.95rem;
+  color: rgba(15, 23, 42, 0.78);
+  letter-spacing: 0.2px;
+  user-select: none;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Optional: nicer in dark mode */
+@media (prefers-color-scheme: dark) {
+  .card {
+    background: rgba(2, 6, 23, 0.62);
+    border: 1px solid rgba(148, 163, 184, 0.16);
+    box-shadow:
+      0 10px 25px rgba(0, 0, 0, 0.35),
+      0 2px 8px rgba(0, 0, 0, 0.28);
+  }
+
+  .spinner {
+    border-color: rgba(148, 163, 184, 0.18);
+    border-top-color: rgba(226, 232, 240, 0.85);
+  }
+
+  .label {
+    color: rgba(226, 232, 240, 0.78);
+  }
+}

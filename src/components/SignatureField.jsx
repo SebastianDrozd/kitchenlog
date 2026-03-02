@@ -2,15 +2,16 @@ import { useRef, useState } from "react";
 import SignatureCanvas from "react-signature-canvas";
 import styles from "../styles/SignatureField.module.css";
 
-export default function SignatureField() {
+export default function SignatureField({ signatureDataUrl, setSignatureDataUrl , handleSaveSignature }) {
   const sigRef = useRef(null);
   const [open, setOpen] = useState(false);
-  const [signatureDataUrl, setSignatureDataUrl] = useState("");
 
   const handleSave = () => {
     if (!sigRef.current || sigRef.current.isEmpty()) return;
     const dataUrl = sigRef.current.toDataURL("image/png");
+    console.log("Generated signature data URL:", dataUrl);
     setSignatureDataUrl(dataUrl);
+    handleSaveSignature();
     setOpen(false);
   };
 
