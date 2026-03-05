@@ -2,18 +2,29 @@ import { useEffect, useRef, useState } from "react";
 import styles from "../styles/Navbar.module.css";
 import BarcodeScannerModal from "./BarcodeScannerModal";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CreateSetup, GetSetupForLine, updateSetupForLine } from "@/api/KitchenLog";
-
+import { CreateSetup, DownloadKitchenLogExport, GetSetupForLine, updateSetupForLine } from "@/api/KitchenLog";
+import toast from "react-hot-toast";
 const lines = [1, 2, 3, 4, 5, 6, 7];
 
 const Navbar = ({ selectedline, setSelectedLine, scannedCode, setScannedCode }) => {
   const [scannerOpen, setScannerOpen] = useState(false);
   const queryClient = useQueryClient();
+  // Export popover state + form
+  const [exportOpen, setExportOpen] = useState(false);
+  const [exportRange, setExportRange] = useState({
+    startDate: "",
+    endDate: "",
+  });
 
-  const {isLoading, data : setupData} = useQuery({
+  const exportWrapRef = useRef(null);
+
+  const updateExport = (key) => (e) => {
+    setExportRange((prev) => ({ ...prev, [key]: e.target.value }));
+  };
+  const { isLoading, data: setupData } = useQuery({
     queryKey: ["setupData", selectedline],
     queryFn: () => GetSetupForLine(selectedline),
-    
+
   })
 
   // Setup popover state + form
@@ -35,17 +46,26 @@ const Navbar = ({ selectedline, setSelectedLine, scannedCode, setScannedCode }) 
   const updateSetup = (key) => (e) => {
     setSetupForm((prev) => ({ ...prev, [key]: e.target.value }));
   };
-
-useEffect(() => {
-    if(setupData){
-        setSetupForm({
-            crew: setupData[0]?.StandardCrew ?? "", 
-            setupStart: setupData[0]?.LineStart ?? "",
-            setupEnd: setupData[0]?.LineFinish ?? "",
-            notes: setupData[0]?.Notes ?? ""
-        })
+  useEffect(() => {
+    const onDown = (e) => {
+      if (!exportOpen) return;
+      if (exportWrapRef.current && !exportWrapRef.current.contains(e.target)) {
+        setExportOpen(false);
+      }
+    };
+    window.addEventListener("mousedown", onDown);
+    return () => window.removeEventListener("mousedown", onDown);
+  }, [exportOpen]);
+  useEffect(() => {
+    if (setupData) {
+      setSetupForm({
+        crew: setupData[0]?.StandardCrew ?? "",
+        setupStart: setupData[0]?.LineStart ?? "",
+        setupEnd: setupData[0]?.LineFinish ?? "",
+        notes: setupData[0]?.Notes ?? ""
+      })
     }
-}, [setupData]) 
+  }, [setupData])
 
   // click-outside to close
   useEffect(() => {
@@ -60,23 +80,23 @@ useEffect(() => {
   }, [setupOpen]);
 
   const saveMutation = useMutation({
-    mutationFn : (data) => CreateSetup(data),
+    mutationFn: (data) => CreateSetup(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ["setupData", selectedline]}),
-      toast.success("Setup created successfully")
+      queryClient.invalidateQueries({ queryKey: ["setupData", selectedline] }),
+        toast.success("Setup created successfully")
     }
   })
 
   const updateMutation = useMutation({
-    mutationFn : (data) => updateSetupForLine(selectedline, data),
+    mutationFn: (data) => updateSetupForLine(selectedline, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ["setupData", selectedline]}),
-      toast.success("Setup updated successfully")
+      queryClient.invalidateQueries({ queryKey: ["setupData", selectedline] }),
+        toast.success("Setup updated successfully")
     }
   })
 
-    const handleSetupSave = () => {
-    if(!selectedline) return;
+  const handleSetupSave = () => {
+    if (!selectedline) return;
 
     const dataToSave = {
       Line: selectedline,
@@ -86,14 +106,39 @@ useEffect(() => {
       Notes: setupForm.notes
     }
     console.log("Data to save for setup", dataToSave)
-    if(setupData){
+    if (setupData) {
       updateMutation.mutate(dataToSave)
-    }else{
+    } else {
       saveMutation.mutate(dataToSave)
     }
   };
 
 
+  const handleBarCodeScan = (value) => {
+    console.log("Scanned barcode:", value);
+  }
+  const handleExport = async () => {
+  const { startDate, endDate } = exportRange;
+
+  if (!startDate || !endDate) {
+    toast.error("Select a start and end date");
+    return;
+  }
+
+  if (startDate > endDate) {
+    toast.error("Start date must be before end date");
+    return;
+  }
+
+  try {
+  
+    await DownloadKitchenLogExport(startDate, endDate);
+    toast.success("Download started");
+  } catch (err) {
+    console.error(err);
+    toast.error("Export failed");
+  }
+};
   return (
     <div className={styles.container}>
       <div className={styles.left}>
@@ -205,6 +250,66 @@ useEffect(() => {
                   </div>
                 </div>
               )}
+              {/* Export dropdown anchored under this */}
+              <div className={styles.exportWrap} ref={exportWrapRef}>
+                <button
+                  type="button"
+                  className={styles.exportButton}
+                  onClick={() => setExportOpen((v) => !v)}
+                >
+                  Export
+                </button>
+
+                {exportOpen && (
+                  <div className={styles.exportPopover}>
+                    <div className={styles.exportTitle}>
+                     
+                    </div>
+
+                    <div className={styles.exportGrid}>
+                      <div className={styles.exportField}>
+                        <label className={styles.exportLabel}>Start Date</label>
+                        <input
+                          className={styles.exportInput}
+                          type="date"
+                          value={exportRange.startDate}
+                          onChange={updateExport("startDate")}
+                        />
+                      </div>
+
+                      <div className={styles.exportField}>
+                        <label className={styles.exportLabel}>End Date</label>
+                        <input
+                          className={styles.exportInput}
+                          type="date"
+                          value={exportRange.endDate}
+                          onChange={updateExport("endDate")}
+                        />
+                      </div>
+                    </div>
+
+                    <div className={styles.exportActions}>
+                      <button
+                        type="button"
+                        className={styles.exportSecondary}
+                        onClick={() => setExportOpen(false)}
+                      >
+                        Cancel
+                      </button>
+
+                      <button
+                        type="button"
+                        className={styles.exportPrimary}
+                        onClick={handleExport}
+                        disabled={!selectedline}
+                        title={!selectedline ? "Select a line first" : ""}
+                      >
+                        Download Excel
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
             <BarcodeScannerModal
@@ -213,9 +318,7 @@ useEffect(() => {
               setScannedCode={setScannedCode}
               open={scannerOpen}
               onClose={() => setScannerOpen(false)}
-              onScan={(value) => {
-                console.log("Scanned barcode:", value);
-              }}
+              onScan={handleBarCodeScan}
             />
           </div>
         </div>

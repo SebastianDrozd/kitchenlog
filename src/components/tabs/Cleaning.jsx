@@ -17,7 +17,7 @@ const Cleaning = ({ data, selectedline }) => {
         setCleaned(e.target.value);
     }
 
-    const handleSaveSignature = () => {
+    const handleSaveCleaning = () => {
        const cleaningData = {
         Line : selectedline,
         Reason: cleaningReason,
@@ -53,6 +53,9 @@ const Cleaning = ({ data, selectedline }) => {
                 <div>
                     <h2 className={styles.title}>Cleaning Information</h2>
                     <p className={styles.subtitle}>Enter details about cleaning tasks and procedures.</p>
+                </div>
+                <div>
+                    <button onClick={handleSaveCleaning} className={styles.saveButton}>Save</button>
                 </div>
             </div>
             <div className={styles.grid}>

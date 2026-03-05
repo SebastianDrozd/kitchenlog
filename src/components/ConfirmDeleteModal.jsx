@@ -72,7 +72,7 @@ export default function ConfirmDeleteModal({
         {/* click outside to close */}
         <button
           type="button"
-          className={styles.outsideClose}
+         
           onClick={onCancel}
           aria-label="Close dialog"
         />

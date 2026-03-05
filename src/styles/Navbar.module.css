@@ -346,3 +346,92 @@
   cursor: not-allowed;
   transform: none;
 }
+.exportWrap {
+  position: relative;
+}
+
+.exportButton {
+  /* match your setupButton vibe */
+   height: 44px;
+  padding: 0 14px;
+  border-radius: 12px;
+
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(15, 23, 42, 0.6);
+  color: #e2e8f0;
+
+  font-size: 0.88rem;
+  font-weight: 850;
+  letter-spacing: 0.02em;
+
+  cursor: pointer;
+  transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+  margin-left: 10px;
+}
+
+.exportPopover {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 320px;
+  background: #111; /* adjust to match your theme */
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: 12px;
+  z-index: 50;
+}
+
+.exportTitle {
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.exportGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.exportField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.exportLabel {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.exportInput {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  color: inherit;
+}
+
+.exportActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.exportSecondary {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.exportPrimary {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: none;
+  background: #2b6cff; /* adjust */
+  color: white;
+  cursor: pointer;
+}

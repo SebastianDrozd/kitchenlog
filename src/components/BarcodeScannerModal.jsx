@@ -8,9 +8,9 @@ export default function BarcodeScannerModal({ open, onClose, onScan, scannedCode
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: (data) => createLineEntry(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["productionData",selectedline]);
-    }
+    onSuccess: async () => {
+   queryClient.refetchQueries({ queryKey: ["productionData", selectedline] });
+}
   });
   const videoRef = useRef(null);
   const readerRef = useRef(null);

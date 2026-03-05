@@ -66,3 +66,13 @@
    border: 1px solid rgba(148, 163, 184, 0.7);
 
 }
+.saveButton {
+  padding: 8px 16px;
+  background-color: #3b82f6;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 120ms ease;
+}

@@ -5,34 +5,35 @@ import Cleaning from "./tabs/Cleaning";
 import DownTime from "./tabs/DownTime";
 import LoadingSpinner from "./LoadingSpinner";
 import ConfirmDeleteModal from "./ConfirmDeleteModal";
+import { DeleteLineEntry } from "@/api/KitchenLog";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 
 const MainContent = ({ data, scannedCode, selectedline, isLoading }) => {
   const tabs = ["Main", "Cleaning", "Downtime"];
   const [activeTab, setActiveTab] = useState("Main");
-
+  const queryClient = useQueryClient();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
 
-  const handleConfirmDelete = async () => {
-    try {
-      setDeleting(true);
-      setShowDeleteModal(true)
 
-      // TODO: call your delete mutation / API here
-      // await deleteMutation.mutateAsync({ productionEntry: data.ProductionEntry });
+ const deleteMutation = useMutation({
+  mutationFn: (entryId) => DeleteLineEntry(entryId),
+  onSuccess: async () => {
+    await queryClient.invalidateQueries({ queryKey: ["productionData", selectedline] });
+    setShowDeleteModal(false);
+  },
+  onError: (error) => {
+    console.error("Error deleting entry:", error);
+  },
+});
 
-      setShowDeleteModal(false);
-    } finally {
-      setDeleting(false);
-    }
-  };
-
-  if (isLoading) {
-    return <LoadingSpinner fullScreen label="Loading entry…" />;
-  }
-
+const handleConfirmDelete =  () => {
+  console.log("Deleting entry with ID:", data.Id);
+ deleteMutation.mutate(data.Id);
+};
+ 
   return (
     <div className={styles.container}>
       <ConfirmDeleteModal
@@ -44,7 +45,7 @@ const MainContent = ({ data, scannedCode, selectedline, isLoading }) => {
         danger
         loading={deleting}
         onCancel={() => setShowDeleteModal(false)}
-        onConfirm={handleConfirmDelete}
+        onConfirm={() => handleConfirmDelete()}
       />
 
       {data ? (
